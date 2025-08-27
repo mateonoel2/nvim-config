@@ -30,5 +30,18 @@ return {
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help tags' })
     vim.keymap.set('n', '<leader>gs', builtin.git_status, { desc = 'Git status' })
     vim.keymap.set('n', '<leader>gc', builtin.git_commits, { desc = 'Git commits' })
+    
+    -- Custom picker for files changed in branch
+    vim.keymap.set('n', '<leader>gd', function()
+      require('telescope.builtin').git_files({
+        prompt_title = 'Files changed in branch',
+        git_command = { 'git', 'diff', '--name-only', 'main..HEAD' },
+        previewer = require('telescope.previewers').new_termopen_previewer({
+          get_command = function(entry)
+            return { 'git', 'diff', 'main..HEAD', '--', entry.value }
+          end
+        })
+      })
+    end, { desc = 'Git diff files (branch)' })
   end,
 }
