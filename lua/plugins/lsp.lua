@@ -22,17 +22,11 @@ return {
       local lspconfig = require("lspconfig")
       
       lspconfig.pylsp.setup({
-        on_attach = function(client)
-          client.server_capabilities.publishDiagnostics = false
-        end,
         settings = {
           pylsp = {
             plugins = {
               pycodestyle = { enabled = false },
-              mccabe = { enabled = false },
-              pyflakes = { enabled = false },
               pylint = { enabled = false },
-              rope_completion = { enabled = false },
               yapf = { enabled = false },
               autopep8 = { enabled = false },
               flake8 = { enabled = false },
@@ -45,12 +39,6 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
-          local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          if client and client.name == "pylsp" then
-            client.server_capabilities.publishDiagnostics = false
-            vim.diagnostic.enable(false, { bufnr = ev.buf })
-          end
-          
           local opts = { buffer = ev.buf }
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
