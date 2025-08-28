@@ -33,12 +33,25 @@ return {
     
     -- Custom picker for files changed in branch
     vim.keymap.set('n', '<leader>gd', function()
-      require('telescope.builtin').git_files({
-        prompt_title = 'Files changed in branch',
-        git_command = { 'git', 'diff', '--name-only', 'main..HEAD' },
+      -- Get the default branch name from remote
+      local default_branch = vim.fn.system('git remote show origin | grep "HEAD branch" | cut -d: -f2 | xargs'):gsub('\n', '')
+      if default_branch == '' then
+        -- Fallback: check what origin/HEAD points to
+        local head_ref = vim.fn.system('git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null'):gsub('\n', ''):gsub('refs/remotes/origin/', '')
+        if head_ref ~= '' then
+          default_branch = head_ref
+        else
+          -- Last resort: assume main
+          default_branch = 'main'
+        end
+      end
+      
+      require('telescope.builtin').find_files({
+        prompt_title = 'Files changed in branch (origin/' .. default_branch .. '..HEAD)',
+       find_command = { 'git', 'diff', '--name-only', 'origin/' .. default_branch .. '..HEAD' },
         previewer = require('telescope.previewers').new_termopen_previewer({
           get_command = function(entry)
-            return { 'git', 'diff', 'main..HEAD', '--', entry.value }
+            return { 'git', 'diff', 'origin/' .. default_branch .. '..HEAD', '--', entry.value }
           end
         })
       })
