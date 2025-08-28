@@ -28,3 +28,7 @@ vim.opt.incsearch = true -- Incremental search
 vim.opt.termguicolors = true -- Enable 24-bit colors
 vim.opt.signcolumn = "yes" -- Always show sign column
 vim.opt.updatetime = 50 -- Faster completion
+
+-- Keybindings
+vim.keymap.set("n", "<D-s>", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("i", "<D-s>", "<Esc>:w<CR>", { desc = "Save file" })
