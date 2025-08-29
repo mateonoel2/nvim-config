@@ -4,7 +4,7 @@ return {
     event = "VeryLazy",
     config = function()
       require("which-key").setup({
-        delay = 0,
+        delay = 500,
       })
     end,
   },
