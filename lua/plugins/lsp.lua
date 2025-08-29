@@ -59,11 +59,42 @@ vim.lsp.config.ruff = {
 -- Enable the LSP servers
 vim.lsp.enable({ "pylsp", "ruff" })
 
+-- Enable automatic completion on text change
+vim.api.nvim_create_autocmd("TextChangedI", {
+	callback = function()
+		local line = vim.api.nvim_get_current_line()
+		local col = vim.api.nvim_win_get_cursor(0)[2]
+		if col > 0 and line:sub(col, col):match("[%w%.]") then
+			vim.lsp.buf.completion()
+		end
+	end,
+})
+
+-- Tab completion mapping
+vim.keymap.set("i", "<Tab>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-n>"
+	else
+		return "<Tab>"
+	end
+end, { expr = true })
+
+vim.keymap.set("i", "<S-Tab>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-p>"
+	else
+		return "<S-Tab>"
+	end
+end, { expr = true })
+
 -- Setup LSP keymaps
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		local opts = { buffer = ev.buf }
+		
+		-- Enable omnifunc completion
+		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 		vim.keymap.set(
 			"n",
 			"gD",

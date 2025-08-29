@@ -28,3 +28,6 @@ vim.opt.incsearch = true -- Incremental search
 vim.opt.termguicolors = true -- Enable 24-bit colors
 vim.opt.signcolumn = "yes" -- Always show sign column
 vim.opt.updatetime = 50 -- Faster completion
+
+-- Enable completion
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
