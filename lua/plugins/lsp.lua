@@ -31,33 +31,7 @@ return {
       lspconfig.biome.setup({})
       lspconfig.eslint.setup({})
 
-      -- Enable automatic completion on text change
-      vim.api.nvim_create_autocmd("TextChangedI", {
-        callback = function()
-          local line = vim.api.nvim_get_current_line()
-          local col = vim.api.nvim_win_get_cursor(0)[2]
-          if col > 0 and line:sub(col, col):match("[%w%.]") then
-            vim.lsp.buf.completion()
-          end
-        end,
-      })
 
-      -- Tab completion mapping
-      vim.keymap.set("i", "<Tab>", function()
-        if vim.fn.pumvisible() == 1 then
-          return "<C-n>"
-        else
-          return "<Tab>"
-        end
-      end, { expr = true })
-
-      vim.keymap.set("i", "<S-Tab>", function()
-        if vim.fn.pumvisible() == 1 then
-          return "<C-p>"
-        else
-          return "<S-Tab>"
-        end
-      end, { expr = true })
 
       -- Setup LSP keymaps
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -76,6 +50,7 @@ return {
           vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
           vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
           vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show line diagnostics" }))
+          
         end,
       })
     end,
