@@ -19,26 +19,30 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = { "mason-lspconfig.nvim" },
 		config = function()
-			local lspconfig = require("lspconfig")
-
-			-- Setup LSP servers
-			lspconfig.pylsp.setup({
+			-- Setup LSP servers using vim.lsp.config
+			vim.lsp.config('pylsp', {
 				settings = {
 					pylsp = {
 						plugins = {
+              mypy = { enabled = false },
 							pycodestyle = { enabled = false },
 							pyflakes = { enabled = false },
 						},
 					},
 				},
 			})
-			lspconfig.ruff.setup({
+
+			vim.lsp.config('ruff', {
 				on_attach = function(client, bufnr)
 					client.server_capabilities.hoverProvider = false
 				end,
 			})
-			lspconfig.biome.setup({})
-			lspconfig.eslint.setup({})
+
+			-- Enable LSP servers
+			vim.lsp.enable('pylsp')
+			vim.lsp.enable('ruff')
+			vim.lsp.enable('biome')
+			vim.lsp.enable('eslint')
 
 			-- Setup LSP keymaps
 			vim.api.nvim_create_autocmd("LspAttach", {

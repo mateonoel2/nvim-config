@@ -31,3 +31,5 @@ vim.opt.updatetime = 50 -- Faster completion
 
 -- Enable completion
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
+
+vim.opt.scroll = 5
